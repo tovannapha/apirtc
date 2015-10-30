@@ -1,0 +1,20 @@
+{
+    "version": "1.2.8",
+    "name": "com.eface2face.iosrtc",
+    "cordova_name": "iosrtc",
+    "description": "Cordova iOS plugin exposing the full WebRTC W3C JavaScript APIs",
+    "license": "MIT",
+    "keywords": [
+        "WebRTC",
+        "iOS"
+    ],
+    "platforms": [
+        "ios"
+    ],
+    "engines": [
+        {
+            "name": "cordova-ios",
+            "version": ">=3.8.0"
+        }
+    ]
+}

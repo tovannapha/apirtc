@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ <script src="https://cloud.apizee.com/libs/jquery-1.9.0.min.js"></script>
+ <script src="cordova.js"></script>
+ <script src="https://cloud.apizee.com/apiRTC/v2.13/apiRTC-2.13.min.debug.js"></script>
+ </head>
+ 
+ <body onload="onLoad()">
+ <input type="text" id="number" value="" placeholder="Enter Destination ID"/>
+ <input id="call" type="button" value="Call" />
+ <input id="hangup" type="button" hidden value="Hangup" />
+ <span id="status">Registration Ongoing</span>
+ 
+ <div id="myRemoteVideo" style="width:640px; height:480px;"></div>
+ <video width="30%" height="30%" id="myMiniVideo" autoplay="autoplay"></video>
+
+ <script type="text/javascript" src="cordova.js"></script>
+ <script>
+ 
+ function incomingCallHandler(e) {
+ apiRTC.addEventListener("remoteHangup", remoteHangupHandler);
+ $("#call").hide();
+ $("#hangup").show();
+ }
+ 
+ function remoteHangupHandler(e) {
+ $("#call").show();
+ $("#hangup").hide();
+ }
+ 
+ function userMediaErrorHandler(e) {
+ $("#call").show();
+ $("#hangup").hide();
+ }
+ 
+ function sessionReadyHandler(e) {
+ 
+ apiRTC.addEventListener("incomingCall", incomingCallHandler);
+ apiRTC.addEventListener("userMediaError", userMediaErrorHandler);
+ 
+ var webRTCClient = apiCC.session.createWebRTCClient({
+ minilocalVideo : "myMiniVideo",
+ remoteVideo : "myRemoteVideo",
+ status : "status"
+ });
+ 
+ $("#call").click(function () {
+ $("#call").hide();
+ $("#hangup").show();
+ 
+ apiRTC.addEventListener("remoteHangup", remoteHangupHandler);
+ destNumber = $("#number").val();
+ webRTCClient.call(destNumber);
+ });
+ 
+ $("#hangup").click(function () {
+ $("#call").show();
+ $("#hangup").hide();
+ 
+ webRTCClient.hangUp();
+ });
+ }
+ 
+ function onDeviceReady() {
+ 
+ if (device.platform == 'iOS'){
+ cordova.plugins.iosrtc.registerGlobals();
+ }
+ }
+ 
+ function onLoad() {
+ 
+ apiRTC.init({
+ //apiCCId : "1234", // Your can overide your number
+ onReady: sessionReadyHandler,
+ apiKey : "myDemoApiKey"
+ });
+ 
+ document.addEventListener("deviceready", onDeviceReady, false);
+ }
+ </script>
+ </body>
+</html>
+
+
